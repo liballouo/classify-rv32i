@@ -27,10 +27,41 @@ argmax:
 
     lw t0, 0(a0)
 
-    li t1, 0
-    li t2, 1
+    li t1, 0 # index 
+    li t2, 1 # length counter
 loop_start:
     # TODO: Add your own implementation
+    # initialize the maximum number
+    li t3, 0 # tmp max
+    # initialize the result (the index of the first maximum element)
+    li t4, 0 # tmp index
+loop:
+    # load next element
+    lw t0, 0(a0)
+    # loop done
+    blt a1, t2, done
+    # if current number is less than maximum number, move to next number 
+    blt t0, t3, skip
+    # update the maximum value
+    mv t3, t0
+    # update the result index
+    mv t4, t1
+
+skip:
+    # move to the next element
+    addi a0, a0, 4
+    # increase the index
+    addi t1, t1, 1
+    # increase the length counter
+    addi t2, t2, 1
+    # loop continue
+    j loop
+
+done:
+    # store the result
+    # sw t4, 0(a0)
+    mv a0, t4
+    jr ra
 
 handle_error:
     li a0, 36

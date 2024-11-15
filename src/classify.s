@@ -167,6 +167,25 @@ classify:
     lw t0, 0(s3)
     lw t1, 0(s8)
     # mul a0, t0, t1 # FIXME: Replace 'mul' with your own implementation
+    # initialize
+    li a0, 0
+mul_start_1:
+    # finish mul
+    beq t1, x0, mul_done_1
+    # decide whether adding multiplier to the result or not
+    andi t2, t1, 1
+    # skip addition if LSB of multiplicand is 0
+    beq t2, x0, skip_add_1
+    # add multiplier to the result
+    add a0, a0, t0
+skip_add_1:
+    # shift multiplier and multiplicand
+    slli t0, t0, 1
+    srli t1, t1, 1
+    # continue mul
+    j mul_start_1
+mul_done_1:
+
     slli a0, a0, 2
     jal malloc 
     beq a0, x0, error_malloc
@@ -205,6 +224,24 @@ classify:
     lw t1, 0(s8)
     # mul a1, t0, t1 # length of h array and set it as second argument
     # FIXME: Replace 'mul' with your own implementation
+    # initialize
+    li a1, 0
+mul_start_2:
+    # finish mul
+    beq t1, x0, mul_done_2
+    # decide whether adding multiplier to the result or not
+    andi t2, t1, 1
+    # skip addition if LSB of multiplicand is 0
+    beq t2, x0, skip_add_2
+    # add multiplier to the result
+    add a1, a1, t0
+skip_add_2:
+    # shift multiplier and multiplicand
+    slli t0, t0, 1
+    srli t1, t1, 1
+    # continue mul
+    j mul_start_2
+mul_done_2:
     
     jal relu
     
@@ -227,6 +264,25 @@ classify:
     lw t0, 0(s3)
     lw t1, 0(s6)
     # mul a0, t0, t1 # FIXME: Replace 'mul' with your own implementation
+    # initialize
+    li a0, 0
+mul_start_3:
+    # finish mul
+    beq t1, x0, mul_done_3
+    # decide whether adding multiplier to the result or not
+    andi t2, t1, 1
+    # skip addition if LSB of multiplicand is 0
+    beq t2, x0, skip_add_3
+    # add multiplier to the result
+    add a0, a0, t0
+skip_add_3:
+    # shift multiplier and multiplicand
+    slli t0, t0, 1
+    srli t1, t1, 1
+    # continue mul
+    j mul_start_3
+mul_done_3:
+
     slli a0, a0, 2
     jal malloc 
     beq a0, x0, error_malloc
@@ -286,9 +342,27 @@ classify:
     mv a0, s10 # load o array into first arg
     lw t0, 0(s3)
     lw t1, 0(s6)
-    mul a1, t0, t1 # load length of array into second arg
+    # mul a1, t0, t1 # load length of array into second arg
     # FIXME: Replace 'mul' with your own implementation
-    
+    # initialize
+    li a1, 0
+mul_start_4:
+    # finish mul
+    beq t1, x0, mul_done_4
+    # decide whether adding multiplier to the result or not
+    andi t2, t1, 1
+    # skip addition if LSB of multiplicand is 0
+    beq t2, x0, skip_add_4
+    # add multiplier to the result
+    add a1, a1, t0
+skip_add_4:
+    # shift multiplier and multiplicand
+    slli t0, t0, 1
+    srli t1, t1, 1
+    # continue mul
+    j mul_start_4
+mul_done_4:
+
     jal argmax
     
     mv t0, a0 # move return value of argmax into t0

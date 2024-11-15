@@ -60,7 +60,7 @@ matmul:
     mv s4, a3 # incrementing matrix B pointer, increments during inner loop 
     
 outer_loop_start:
-    #s0 is going to be the loop counter for the rows in A
+    # s0 is going to be the loop counter for the rows in A
     li s1, 0
     mv s4, a3
     blt s0, a1, inner_loop_start
@@ -87,6 +87,7 @@ inner_loop_start:
     sw a4, 16(sp)
     sw a5, 20(sp)
     
+
     mv a0, s3 # setting pointer for matrix A into the correct argument value
     mv a1, s4 # setting pointer for Matrix B into the correct argument value
     mv a2, a2 # setting the number of elements to use to the columns of A
@@ -116,6 +117,27 @@ inner_loop_start:
     
 inner_loop_end:
     # TODO: Add your own implementation
+    # increase s0 
+    addi s0, s0, 1
+    # move to the next row
+    slli t3, a2, 2 # get the stride of the whole row
+    add s3, s3, t3 
+    # continue outer loop
+    blt s0, a1, outer_loop_start
+
+outer_loop_end:
+    lw s5, 24(sp)
+    lw s4, 20(sp)
+    lw s3, 16(sp)
+    lw s2, 12(sp)
+    lw s1, 8(sp)
+    lw s0, 4(sp)
+
+    lw ra, 0(sp)
+    addi sp, sp, 28
+
+done:
+    jr ra
 
 error:
     li a0, 38

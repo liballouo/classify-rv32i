@@ -63,6 +63,24 @@ write_matrix:
 
     # mul s4, s2, s3   # s4 = total elements
     # FIXME: Replace 'mul' with your own implementation
+    # initialize the number of elements
+    li s4, 0
+mul_start:
+    # finish mul
+    beq s3, x0, mul_done
+    # decide whether adding multiplier to the result or not
+    andi t3, s3, 1
+    # skip addition if LSB of multiplicand is 0
+    beq t3, x0, skip_add
+    # add multiplier to the result
+    add s4, s4, s2
+skip_add:
+    # shift multiplier and multiplicand
+    slli s2, s2, 1
+    srli s3, s3, 1
+    # continue mul
+    j mul_start
+mul_done:
 
     # write matrix data to file
     mv a0, s0

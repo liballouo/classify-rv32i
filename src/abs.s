@@ -22,6 +22,17 @@ abs:
     bge t0, zero, done
 
     # TODO: Add your own implementation
+    # mask for clear the sign-bit
+    li t1, 0x7fffffff
+    # clear the sign-bit
+    and t0, t0, t1
+    # 2^31 to substract the sign-bit cleared result
+    li t1, 0x80000000
+    # perform substraction
+    sub t0, t1, t0
+
+    # store the result
+    sw t0 0(a0)
 
 done:
     # Epilogue
