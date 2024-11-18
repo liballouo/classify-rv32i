@@ -36,10 +36,10 @@ loop_start:
     # initialize the result (the index of the first maximum element)
     li t4, 0 # tmp index
 loop:
-    # load next element
-    lw t0, 0(a0)
     # loop done
     blt a1, t2, done
+    # load next element
+    lw t0, 0(a0)
     # if current number is less than maximum number, move to next number 
     blt t0, t3, skip
     # update the maximum value
@@ -59,7 +59,6 @@ skip:
 
 done:
     # store the result
-    # sw t4, 0(a0)
     mv a0, t4
     jr ra
 

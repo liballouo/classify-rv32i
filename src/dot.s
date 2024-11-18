@@ -33,7 +33,6 @@ dot:
 
     li t0, 0 # result           
     li t1, 0 # counter
-    li t3, 1 # end addition threshold
 
 loop_start:
     bge t1, a2, loop_end
@@ -42,29 +41,33 @@ loop_start:
     lw t2, 0(a0)
     lw t4, 0(a1)
 
-loop:
-    # addition
+    # initialize the number of elements
+    li t5, 0
+mul_start:
+    # finish mul
+    beq t4, x0, mul_done
+    # decide whether adding multiplier to the result or not
+    andi t3, t4, 1
+    # skip addition if LSB of multiplicand is 0
+    beq t3, x0, skip_add
+    # add multiplier to the result
     add t0, t0, t2
-    # loop for number of the element in second array times
-    addi t4, t4, -1
-    # continue addition
-    bge t4, t3, loop
-
-next_element:
-    # move to next element
-    mv t5, a3 # stride for first array
-stride_1st_array:
-    addi a0, a0, 4
-    addi t5, t5, -1
-    bnez t5, stride_1st_array
-    mv t6, a4 # stride for second array
-stride_2nd_array:
-    addi a1, a1, 4
-    addi t6, t6, -1
-    bnez t6, stride_2nd_array
-    # increase the counter
+skip_add:
+    # shift multiplier and multiplicand
+    slli t2, t2, 1
+    srli t4, t4, 1
+    # continue mul if multiplicand still has value
+    bne t4, x0, mul_start
+mul_done:
+    # increase counter
     addi t1, t1, 1
-    # loop continue
+    # get the strides of two arrays
+    slli t5, a3, 2
+    slli t6, a4, 2
+    # get the next address by adding differences
+    add a0, a0, t5
+    add a1, a1, t6
+
     j loop_start
 
 loop_end:
